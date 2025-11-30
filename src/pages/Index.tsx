@@ -64,6 +64,21 @@ const Index = () => {
       url: 'https://cdn.poehali.dev/projects/80771259-9c0e-48f1-bcf2-e5f159e7fd24/files/655322f4-de76-4a6f-88bf-3df24cc99c73.jpg',
       title: 'Гардеробная',
       description: 'Напольное зеркало в полный рост'
+    },
+    {
+      url: 'https://cdn.poehali.dev/projects/80771259-9c0e-48f1-bcf2-e5f159e7fd24/files/a00f385c-dc09-41b4-ab65-d92e37fb35a1.jpg',
+      title: 'Роскошная спальня',
+      description: 'Туалетный столик с подсветкой'
+    },
+    {
+      url: 'https://cdn.poehali.dev/projects/80771259-9c0e-48f1-bcf2-e5f159e7fd24/files/97ceb03f-b4c8-4822-809d-1e966261e80a.jpg',
+      title: 'Бэкстейдж',
+      description: 'Профессиональная гримёрная станция'
+    },
+    {
+      url: 'https://cdn.poehali.dev/projects/80771259-9c0e-48f1-bcf2-e5f159e7fd24/files/5e58894f-9caf-4af4-822a-a98da8b96717.jpg',
+      title: 'Компактное решение',
+      description: 'Настольное зеркало с регулируемой подсветкой'
     }
   ];
 
