@@ -3,12 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Icon from '@/components/ui/icon';
+import Header from '@/components/Header';
+import PriceCalculator from '@/components/PriceCalculator';
+import ImageGalleryDialog from '@/components/ImageGalleryDialog';
+import Footer from '@/components/Footer';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -100,107 +99,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
-        <div className="container mx-auto px-4 py-4">
-          <nav className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Icon name="Sparkles" className="text-primary" size={28} />
-              <span className="text-2xl font-bold text-secondary">MIRROR</span>
-            </div>
-            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon">
-                  <Icon name="Menu" size={24} />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[280px]">
-                <div className="flex flex-col gap-6 mt-8">
-                  <button
-                    onClick={() => scrollToSection('home')}
-                    className="text-lg font-medium hover:text-primary transition-colors text-left"
-                  >
-                    Главная
-                  </button>
-                  <button
-                    onClick={() => scrollToSection('catalog')}
-                    className="text-lg font-medium hover:text-primary transition-colors text-left"
-                  >
-                    Каталог
-                  </button>
-                  <button
-                    onClick={() => scrollToSection('portfolio')}
-                    className="text-lg font-medium hover:text-primary transition-colors text-left"
-                  >
-                    Портфолио
-                  </button>
-                  <button
-                    onClick={() => scrollToSection('customization')}
-                    className="text-lg font-medium hover:text-primary transition-colors text-left"
-                  >
-                    Кастомизация
-                  </button>
-                  <button
-                    onClick={() => scrollToSection('about')}
-                    className="text-lg font-medium hover:text-primary transition-colors text-left"
-                  >
-                    О нас
-                  </button>
-                  <button
-                    onClick={() => scrollToSection('contacts')}
-                    className="text-lg font-medium hover:text-primary transition-colors text-left"
-                  >
-                    Контакты
-                  </button>
-                  <Button onClick={() => scrollToSection('contacts')} className="w-full">
-                    Заказать
-                  </Button>
-                </div>
-              </SheetContent>
-            </Sheet>
-            <div className="hidden md:flex items-center gap-8">
-              <button
-                onClick={() => scrollToSection('home')}
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                Главная
-              </button>
-              <button
-                onClick={() => scrollToSection('catalog')}
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                Каталог
-              </button>
-              <button
-                onClick={() => scrollToSection('portfolio')}
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                Портфолио
-              </button>
-              <button
-                onClick={() => scrollToSection('customization')}
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                Кастомизация
-              </button>
-              <button
-                onClick={() => scrollToSection('about')}
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                О нас
-              </button>
-              <button
-                onClick={() => scrollToSection('contacts')}
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                Контакты
-              </button>
-            </div>
-            <Button onClick={() => scrollToSection('contacts')}>
-              Заказать
-            </Button>
-          </nav>
-        </div>
-      </header>
+      <Header 
+        mobileMenuOpen={mobileMenuOpen}
+        setMobileMenuOpen={setMobileMenuOpen}
+        scrollToSection={scrollToSection}
+      />
 
       <section id="home" className="pt-32 pb-20 px-4">
         <div className="container mx-auto max-w-6xl">
@@ -336,104 +239,20 @@ const Index = () => {
             ))}
           </div>
 
-          <Card className="mt-12 max-w-2xl mx-auto">
-            <CardContent className="p-8">
-              <h3 className="text-2xl font-bold text-secondary mb-6 text-center">Калькулятор стоимости</h3>
-              
-              <div className="space-y-6">
-                <div>
-                  <Label className="text-base mb-3 block">Размер (см): {mirrorSize}</Label>
-                  <Slider
-                    value={[mirrorSize]}
-                    onValueChange={(value) => setMirrorSize(value[0])}
-                    min={40}
-                    max={200}
-                    step={10}
-                    className="mb-2"
-                  />
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>40 см</span>
-                    <span>200 см</span>
-                  </div>
-                </div>
-
-                <div>
-                  <Label className="text-base mb-3 block">Тип зеркала</Label>
-                  <RadioGroup value={mirrorType} onValueChange={setMirrorType}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="led" id="led" />
-                      <Label htmlFor="led">LED подсветка</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="hollywood" id="hollywood" />
-                      <Label htmlFor="hollywood">Голливудские лампы (+5000₽)</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                <div>
-                  <Label className="text-base mb-3 block">Цвет рамы</Label>
-                  <RadioGroup value={frameColor} onValueChange={setFrameColor}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="white" id="white" />
-                      <Label htmlFor="white">Белый</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="black" id="black" />
-                      <Label htmlFor="black">Чёрный</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="wood" id="wood" />
-                      <Label htmlFor="wood">Дерево (+2000₽)</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="gold" id="gold" />
-                      <Label htmlFor="gold">Золото (+3000₽)</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                <div>
-                  <Label className="text-base mb-3 block">Температура света</Label>
-                  <RadioGroup value={lightTemp} onValueChange={setLightTemp}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="warm" id="warm" />
-                      <Label htmlFor="warm">Тёплый</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="neutral" id="neutral" />
-                      <Label htmlFor="neutral">Нейтральный</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="cold" id="cold" />
-                      <Label htmlFor="cold">Холодный</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="options"
-                    checked={hasOptions}
-                    onChange={(e) => setHasOptions(e.target.checked)}
-                    className="w-4 h-4 cursor-pointer"
-                  />
-                  <Label htmlFor="options" className="cursor-pointer">Дополнительные опции (диммер, розетки) +4000₽</Label>
-                </div>
-
-                <div className="pt-6 border-t">
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-lg font-semibold">Итоговая стоимость:</span>
-                    <span className="text-3xl font-bold text-primary">{calculatePrice().toLocaleString('ru-RU')} ₽</span>
-                  </div>
-                  <Button size="lg" className="w-full" onClick={() => scrollToSection('contacts')}>
-                    Заказать зеркало
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <PriceCalculator
+            mirrorSize={mirrorSize}
+            setMirrorSize={setMirrorSize}
+            mirrorType={mirrorType}
+            setMirrorType={setMirrorType}
+            frameColor={frameColor}
+            setFrameColor={setFrameColor}
+            lightTemp={lightTemp}
+            setLightTemp={setLightTemp}
+            hasOptions={hasOptions}
+            setHasOptions={setHasOptions}
+            calculatePrice={calculatePrice}
+            scrollToSection={scrollToSection}
+          />
         </div>
       </section>
 
@@ -569,39 +388,12 @@ const Index = () => {
         </div>
       </section>
 
-      <footer className="bg-gray-900 text-gray-400 py-8 px-4">
-        <div className="container mx-auto max-w-6xl text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Icon name="Sparkles" className="text-primary" size={24} />
-            <span className="text-xl font-bold text-white">MIRROR</span>
-          </div>
-          <p className="text-sm">
-            © 2024 MIRROR. Все права защищены.
-          </p>
-        </div>
-      </footer>
+      <Footer />
 
-      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-4xl p-0 overflow-hidden">
-          {selectedImage && (
-            <>
-              <DialogHeader className="p-6 pb-0">
-                <DialogTitle className="text-2xl font-bold">{selectedImage.title}</DialogTitle>
-              </DialogHeader>
-              <div className="relative">
-                <img
-                  src={selectedImage.url}
-                  alt={selectedImage.title}
-                  className="w-full h-auto max-h-[70vh] object-contain"
-                />
-              </div>
-              <div className="p-6 pt-4">
-                <p className="text-muted-foreground">{selectedImage.description}</p>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+      <ImageGalleryDialog 
+        selectedImage={selectedImage}
+        setSelectedImage={setSelectedImage}
+      />
     </div>
   );
 };
