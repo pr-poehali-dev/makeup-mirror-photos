@@ -3,15 +3,41 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Icon from '@/components/ui/icon';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{ url: string; title: string; description: string } | null>(null);
+  const [mirrorSize, setMirrorSize] = useState(80);
+  const [mirrorType, setMirrorType] = useState('led');
+  const [frameColor, setFrameColor] = useState('white');
+  const [lightTemp, setLightTemp] = useState('neutral');
+  const [hasOptions, setHasOptions] = useState(false);
 
   const scrollToSection = (sectionId: string) => {
     setActiveSection(sectionId);
+    setMobileMenuOpen(false);
     const element = document.getElementById(sectionId);
     element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const calculatePrice = () => {
+    let basePrice = 15000;
+    const sizeMultiplier = mirrorSize / 80;
+    basePrice *= sizeMultiplier;
+    
+    if (mirrorType === 'hollywood') basePrice += 5000;
+    if (frameColor === 'gold') basePrice += 3000;
+    if (frameColor === 'wood') basePrice += 2000;
+    if (hasOptions) basePrice += 4000;
+    
+    return Math.round(basePrice);
   };
 
   const portfolioImages = [
@@ -81,6 +107,56 @@ const Index = () => {
               <Icon name="Sparkles" className="text-primary" size={28} />
               <span className="text-2xl font-bold text-secondary">MIRROR</span>
             </div>
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild className="md:hidden">
+                <Button variant="ghost" size="icon">
+                  <Icon name="Menu" size={24} />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[280px]">
+                <div className="flex flex-col gap-6 mt-8">
+                  <button
+                    onClick={() => scrollToSection('home')}
+                    className="text-lg font-medium hover:text-primary transition-colors text-left"
+                  >
+                    Главная
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('catalog')}
+                    className="text-lg font-medium hover:text-primary transition-colors text-left"
+                  >
+                    Каталог
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('portfolio')}
+                    className="text-lg font-medium hover:text-primary transition-colors text-left"
+                  >
+                    Портфолио
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('customization')}
+                    className="text-lg font-medium hover:text-primary transition-colors text-left"
+                  >
+                    Кастомизация
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('about')}
+                    className="text-lg font-medium hover:text-primary transition-colors text-left"
+                  >
+                    О нас
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('contacts')}
+                    className="text-lg font-medium hover:text-primary transition-colors text-left"
+                  >
+                    Контакты
+                  </button>
+                  <Button onClick={() => scrollToSection('contacts')} className="w-full">
+                    Заказать
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
             <div className="hidden md:flex items-center gap-8">
               <button
                 onClick={() => scrollToSection('home')}
@@ -218,6 +294,7 @@ const Index = () => {
               <div
                 key={index}
                 className="group relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
+                onClick={() => setSelectedImage(image)}
               >
                 <div className="aspect-[4/5] overflow-hidden">
                   <img
@@ -259,14 +336,104 @@ const Index = () => {
             ))}
           </div>
 
-          <div className="mt-12 text-center">
-            <p className="text-muted-foreground mb-6">
-              Не можете определиться? Наши специалисты помогут подобрать идеальную конфигурацию
-            </p>
-            <Button size="lg" onClick={() => scrollToSection('contacts')}>
-              Получить консультацию
-            </Button>
-          </div>
+          <Card className="mt-12 max-w-2xl mx-auto">
+            <CardContent className="p-8">
+              <h3 className="text-2xl font-bold text-secondary mb-6 text-center">Калькулятор стоимости</h3>
+              
+              <div className="space-y-6">
+                <div>
+                  <Label className="text-base mb-3 block">Размер (см): {mirrorSize}</Label>
+                  <Slider
+                    value={[mirrorSize]}
+                    onValueChange={(value) => setMirrorSize(value[0])}
+                    min={40}
+                    max={200}
+                    step={10}
+                    className="mb-2"
+                  />
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>40 см</span>
+                    <span>200 см</span>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-base mb-3 block">Тип зеркала</Label>
+                  <RadioGroup value={mirrorType} onValueChange={setMirrorType}>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="led" id="led" />
+                      <Label htmlFor="led">LED подсветка</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="hollywood" id="hollywood" />
+                      <Label htmlFor="hollywood">Голливудские лампы (+5000₽)</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                <div>
+                  <Label className="text-base mb-3 block">Цвет рамы</Label>
+                  <RadioGroup value={frameColor} onValueChange={setFrameColor}>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="white" id="white" />
+                      <Label htmlFor="white">Белый</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="black" id="black" />
+                      <Label htmlFor="black">Чёрный</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="wood" id="wood" />
+                      <Label htmlFor="wood">Дерево (+2000₽)</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="gold" id="gold" />
+                      <Label htmlFor="gold">Золото (+3000₽)</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                <div>
+                  <Label className="text-base mb-3 block">Температура света</Label>
+                  <RadioGroup value={lightTemp} onValueChange={setLightTemp}>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="warm" id="warm" />
+                      <Label htmlFor="warm">Тёплый</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="neutral" id="neutral" />
+                      <Label htmlFor="neutral">Нейтральный</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="cold" id="cold" />
+                      <Label htmlFor="cold">Холодный</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="options"
+                    checked={hasOptions}
+                    onChange={(e) => setHasOptions(e.target.checked)}
+                    className="w-4 h-4 cursor-pointer"
+                  />
+                  <Label htmlFor="options" className="cursor-pointer">Дополнительные опции (диммер, розетки) +4000₽</Label>
+                </div>
+
+                <div className="pt-6 border-t">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-lg font-semibold">Итоговая стоимость:</span>
+                    <span className="text-3xl font-bold text-primary">{calculatePrice().toLocaleString('ru-RU')} ₽</span>
+                  </div>
+                  <Button size="lg" className="w-full" onClick={() => scrollToSection('contacts')}>
+                    Заказать зеркало
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
@@ -413,6 +580,28 @@ const Index = () => {
           </p>
         </div>
       </footer>
+
+      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+        <DialogContent className="max-w-4xl p-0 overflow-hidden">
+          {selectedImage && (
+            <>
+              <DialogHeader className="p-6 pb-0">
+                <DialogTitle className="text-2xl font-bold">{selectedImage.title}</DialogTitle>
+              </DialogHeader>
+              <div className="relative">
+                <img
+                  src={selectedImage.url}
+                  alt={selectedImage.title}
+                  className="w-full h-auto max-h-[70vh] object-contain"
+                />
+              </div>
+              <div className="p-6 pt-4">
+                <p className="text-muted-foreground">{selectedImage.description}</p>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
